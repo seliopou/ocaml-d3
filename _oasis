@@ -1,0 +1,29 @@
+OASISFormat: 0.4
+Name:        d3
+Version:     0.1.0
+Synopsis:    OCaml bindings for D3.js
+Authors:     Spiros Eliopoulos <seliopou@gmail.com>
+Maintainers: Spiros Eliopoulos <seliopou@gmail.com>
+Homepage:    https://github.com/seliopou/ocaml-d3
+Copyrights:  (C) 2015 Inhabited Type LLC
+License:     BSD-3-clause
+Plugins:     META (0.4), DevFiles (0.4)
+BuildTools: ocamlbuild
+
+Flag examples
+  Description:  build example programs
+  Default:      false
+
+Library d3
+  Path:         lib
+  Findlibname:  d3
+  Modules:      D3
+  BuildDepends: js_of_ocaml, js_of_ocaml.syntax
+
+Executable rectangle
+  Path:             examples
+  MainIs:           rectangle.ml
+  Build$:           flag(examples)
+  CompiledObject:   byte
+  Install:          false
+  BuildDepends:     d3, js_of_ocaml
