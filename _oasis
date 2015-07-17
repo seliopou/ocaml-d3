@@ -27,3 +27,11 @@ Executable rectangle
   CompiledObject:   byte
   Install:          false
   BuildDepends:     d3, js_of_ocaml
+
+Executable todo
+  Path:             examples
+  MainIs:           todo.ml
+  Build$:           flag(examples)
+  CompiledObject:   byte
+  Install:          false
+  BuildDepends:     d3, lwt, js_of_ocaml
