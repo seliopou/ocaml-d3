@@ -19,6 +19,7 @@ build-test: [
   ["ocaml" "setup.ml" "-build"]
   ["ocaml" "setup.ml" "-test"]
 ]
+build-doc: [ "ocaml" "setup.ml" "-doc" ]
 depends: [
   "js_of_ocaml"
   "ocamlfind" {build}

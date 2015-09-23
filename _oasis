@@ -20,6 +20,14 @@ Library d3
   Modules:      D3
   BuildDepends: js_of_ocaml, js_of_ocaml.syntax
 
+Document d3
+  Title:                D3 Docs
+  Type:                 ocamlbuild (0.4)
+  BuildTools+:          ocamldoc
+  Install:              true
+  XOCamlbuildPath:      lib
+  XOCamlbuildLibraries: d3
+
 Executable rectangle
   Path:             examples
   MainIs:           rectangle.ml

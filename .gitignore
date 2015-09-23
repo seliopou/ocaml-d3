@@ -1,5 +1,6 @@
 .*.sw[po]
 _build/
+d3.docdir
 setup.log
 setup.data
 *.native
