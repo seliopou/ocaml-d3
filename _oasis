@@ -42,4 +42,4 @@ Executable todo
   Build$:           flag(examples)
   CompiledObject:   byte
   Install:          false
-  BuildDepends:     d3, lwt, js_of_ocaml
+  BuildDepends:     d3, lwt, js_of_ocaml, yojson

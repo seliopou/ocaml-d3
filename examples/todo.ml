@@ -17,6 +17,18 @@ module Model = struct
     ; toggle  : bool
     }
 
+  let items_to_json is =
+    `List List.(map (fun (msg, state) -> `List [`String msg; `Bool state]) is)
+
+  let items_of_json = function
+    | `List lst ->
+      List.map (function
+        | `List [`String msg; `Bool state] -> (msg, state)
+        | _                                -> failwith "deserialization error: clear 'todos-ocaml-d3' from local storage")
+      lst
+    | _ ->
+      failwith "deserialization error: clear 'todos-ocaml-d3' from local storage"
+
   let init =
     { input = ""; items = []; filter = All; editing = None; toggle = false }
 
@@ -254,13 +266,43 @@ module View = struct
     run selection model (seq [todoapp; low_footer])
 end
 
+module Storage : sig
+  val get : unit -> (string * bool) list
+  val set : (string * bool) list -> unit
+end = struct
+  open Js 
+
+  let key = string "todos-ocaml-d3"
+
+  let storage =
+    Optdef.case (Dom_html.window##localStorage)
+      (fun () -> None)
+      (fun s  -> Some s)
+
+  let get () =
+    match storage with
+    | None   -> []
+    | Some s -> 
+      begin match Opt.to_option (s##getItem(key)) with
+      | Some v -> Model.items_of_json (Yojson.Basic.from_string (to_string v))
+      | None   -> []
+      end
+
+  let set v =
+    match storage with
+    | None   -> ()
+    | Some s ->
+      s##setItem (key, string (Yojson.Basic.to_string (Model.items_to_json v)))
+end
+
 let main () =
   View.render "body" Model.init;
   Lwt_stream.fold (fun e m ->
     let m' = Event.handle e m in
+    Storage.set m'.Model.items;
     View.render "body" m';
     m')
-  Event.stream Model.init
+  Event.stream { Model.init with Model.items = Storage.get () }
 
 let _ =
   Lwt_js_events.async main

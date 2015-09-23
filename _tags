@@ -1,5 +1,5 @@
 # OASIS_START
-# DO NOT EDIT (digest: 00baeb0363b9b936fc521ffc1d9c88ab)
+# DO NOT EDIT (digest: f85348eebf2e509f0467aef35c6b559e)
 # Ignore VCS directories, you can use the same kind of rule outside
 # OASIS_START/STOP if you want to exclude directories that contains
 # useless stuff for the build process
@@ -26,9 +26,11 @@ true: annot, bin_annot
 "examples/todo.byte": pkg_js_of_ocaml
 "examples/todo.byte": pkg_js_of_ocaml.syntax
 "examples/todo.byte": pkg_lwt
+"examples/todo.byte": pkg_yojson
 "examples/todo.byte": use_d3
 <examples/*.ml{,i,y}>: pkg_js_of_ocaml
 <examples/*.ml{,i,y}>: pkg_js_of_ocaml.syntax
 <examples/*.ml{,i,y}>: pkg_lwt
+<examples/*.ml{,i,y}>: pkg_yojson
 <examples/*.ml{,i,y}>: use_d3
 # OASIS_STOP
