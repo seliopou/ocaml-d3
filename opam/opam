@@ -28,3 +28,4 @@ depopts: [
   "lwt" {build}
   "yojson" {build}
 ]
+available: [ ocaml-version >= "4.01.0" ]
