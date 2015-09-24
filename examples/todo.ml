@@ -151,12 +151,12 @@ module View = struct
       | true, None -> Some { text; completed; editing = false }
       | false, _   -> None)
 
-  let items =
+  let items k =
     selectAll "li"
     |. data (fun m _ -> items_of_model m)
     |- nest enter
        [ append "li"
-         |. E.dblclick (fun _ _ i -> Event.(push (Edit i))) ]
+         |. E.dblclick (fun _ _ i -> k (Event.Edit i)) ]
     |- nest update
        [ classed "editing"   (fun _ m i -> m.editing)
        ; classed "completed" (fun _ m i -> m.completed)
@@ -169,13 +169,13 @@ module View = struct
               |. property "checked" (fun _ m i -> Js.bool m.completed)
               |. E.click (fun _ m i ->
                   if m.completed
-                    then Event.(push (Uncheck i))
-                    else Event.(push (Check   i)))
+                    then k (Event.Uncheck i)
+                    else k (Event.Check   i))
             ; static "label"
               |. text (fun _ m _ -> m.text)
             ; static "button"
               |. str attr "class" "destroy"
-              |. E.click (fun _ _ i -> Event.(push (Delete i))) ]
+              |. E.click (fun _ _ i -> k (Event.Delete i)) ]
           ; static "input"
             |. str attr "class" "edit"
             |. property "value" (fun _ m i -> Js.string m.text)
@@ -184,17 +184,17 @@ module View = struct
                 | None   -> assert false
                 | Some t ->
                   let i = Js.coerce t Dom_html.CoerceTo.input (fun _ -> assert false) in
-                  Event.(push (ChangeEdit (Js.to_string i##value))))
+                  k (Event.ChangeEdit (Js.to_string i##value)))
             |. E.keyup (fun e _ _ ->
                  match e##keyCode with
-                 | 27 -> Event.(push CancelEdit) (* ESC_KEY   *)
-                 | 13 -> Event.(push CommitEdit) (* ENTER_KEY *)
+                 | 27 -> k Event.CancelEdit (* ESC_KEY   *)
+                 | 13 -> k Event.CommitEdit (* ENTER_KEY *)
                  | _  -> ())
-            |. E.blur (fun _ _ _ -> Event.(push CancelEdit)) ]
+            |. E.blur (fun _ _ _ -> k Event.CancelEdit) ]
     |- chain
        [ exit <.> remove ]
 
-  let filters =
+  let filters k =
     selectAll "li"
     |. data (fun m _ ->
         let open Model in
@@ -210,47 +210,48 @@ module View = struct
     |- nest update
        [ select "a"
          |. classed "selected" (fun _ (_, active, _) _ -> active) ]
-         |. E.click (fun _ (f,_,_) _ -> Event.(push (Filter f)))
+         |. E.click (fun _ (f,_,_) _ -> k (Event.Filter f))
     |- nest exit
        [ remove ]
 
-  let todoapp =
+  let todoapp k =
     static "section"
     |. str attr "id" "todoapp"
     |- seq
-       [ static "header" <.> str attr "id" "header"
-         |. static "h1"
-         |. text (fun _ _ _ -> "todo")
-       ; static "input" <.> str attr "id" "new-todo"
-         |. str attr "autofocus" ""
-         |. str attr "placeholder" "What needs to be done?"
-         |. property "value" (fun _ m _ -> Js.string m.Model.input)
-         |. E.input (fun e _ _ ->
-             match Js.Opt.to_option e##target with
-             | None   -> assert false
-             | Some t ->
-               let i = Js.coerce t Dom_html.CoerceTo.input (fun _ -> assert false) in
-               Event.(push (ChangeInput (Js.to_string i##value))))
-         |. E.keyup (fun e m i ->
-             if e##keyCode = 13
-               then Event.(push AddInput)
-               else ())
+       [ nest (static "header" <.> str attr "id" "header")
+         [ static "h1"
+           |. text (fun _ _ _ -> "todo")
+         ; static "input" <.> str attr "id" "new-todo"
+           |. str attr "autofocus" ""
+           |. str attr "placeholder" "What needs to be done?"
+           |. property "value" (fun _ m _ -> Js.string m.Model.input)
+           |. E.input (fun e _ _ ->
+               match Js.Opt.to_option e##target with
+               | None   -> assert false
+               | Some t ->
+                 let i = Js.coerce t Dom_html.CoerceTo.input (fun _ -> assert false) in
+                 k (Event.ChangeInput (Js.to_string i##value)))
+           |. E.keyup (fun e m i ->
+               if e##keyCode = 13
+                 then k Event.AddInput
+                 else ())
+         ]
        ; static "section" <.> str attr "id" "main"
          |. seq
             [ static "input"
               |. str attr "id" "toggle-all"
               |. str attr "type" "checkbox"
-              |. E.click (fun _ _ _ -> Event.(push Toggle))
+              |. E.click (fun _ _ _ -> k Event.Toggle)
             ; static "ul"
               |. str attr "id" "todo-list"
-              |- items ]
+              |- items k ]
        ; static "footer" <.> str attr "id" "footer"
          |. seq
             [ static "span" <.> str attr "id" "todo-count"
               |. html (fun _ m _ ->
                   "<strong>" ^ (string_of_int (Model.undone m)) ^ "</strong> items left")
             ; static "ul" <.> str attr "id" "filters"
-              |- filters ] ]
+              |- filters k] ]
 
   let low_footer =
     let content ="
@@ -262,15 +263,15 @@ module View = struct
     |. str attr "id" "info"
     |. html (fun _ _ _ -> content)
 
-  let render selection model =
-    run selection model (seq [todoapp; low_footer])
+  let make k =
+    seq [todoapp k; low_footer]
 end
 
 module Storage : sig
   val get : unit -> (string * bool) list
   val set : (string * bool) list -> unit
 end = struct
-  open Js 
+  open Js
 
   let key = string "todos-ocaml-d3"
 
@@ -282,7 +283,7 @@ end = struct
   let get () =
     match storage with
     | None   -> []
-    | Some s -> 
+    | Some s ->
       begin match Opt.to_option (s##getItem(key)) with
       | Some v -> Model.items_of_json (Yojson.Basic.from_string (to_string v))
       | None   -> []
@@ -295,14 +296,31 @@ end = struct
       s##setItem (key, string (Yojson.Basic.to_string (Model.items_to_json v)))
 end
 
-let main () =
-  View.render "body" Model.init;
+let main_lazy () =
+  (* This code is unused by this example. It's here to demonstrate how to use
+   * the code above without lwt, which will improve performance by a bit. *)
+  let model = ref { Model.init with Model.items = Storage.get () } in
+  let rec go () =
+    D3.run "body" !model (Lazy.force view)
+  and view = lazy (View.make (fun e ->
+    model := Event.handle e !model;
+    go ()))
+  in
+  go ()
+;;
+
+let main_lwt () =
+  let view = View.make Event.push in
+  let init = { Model.init with Model.items = Storage.get () } in
+  D3.run "body" init view;
   Lwt_stream.fold (fun e m ->
     let m' = Event.handle e m in
     Storage.set m'.Model.items;
-    View.render "body" m';
+    D3.run "body" m' view;
     m')
-  Event.stream { Model.init with Model.items = Storage.get () }
+  Event.stream init
+;;
+
 
 let _ =
-  Lwt_js_events.async main
+  Lwt_js_events.async main_lwt
