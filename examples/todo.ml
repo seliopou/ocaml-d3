@@ -304,6 +304,7 @@ let main_lazy () =
     D3.run "body" !model (Lazy.force view)
   and view = lazy (View.make (fun e ->
     model := Event.handle e !model;
+    Storage.set (!model).Model.items;
     go ()))
   in
   go ()
