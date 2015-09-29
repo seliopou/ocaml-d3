@@ -110,10 +110,6 @@ module Event = struct
       | CancelEdit    -> Model.cancel_edit m
       | Check   index -> Model.update_status m index true
       | Uncheck index -> Model.update_status m index false
-
-  let (stream : t Lwt_stream.t), push, complete =
-    let stream, push = Lwt_stream.create () in
-    stream, (fun x -> push (Some x)), (fun () -> push None)
 end
 
 let ifilter_map ~f xs =
@@ -311,7 +307,11 @@ let main_lazy () =
 ;;
 
 let main_lwt () =
-  let view = View.make Event.push in
+  let stream, push, _ =
+    let stream, push = Lwt_stream.create () in
+    stream, (fun x -> push (Some x)), (fun () -> push None)
+  in
+  let view = View.make push in
   let init = { Model.init with Model.items = Storage.get () } in
   D3.run "body" init view;
   Lwt_stream.fold (fun e m ->
@@ -319,7 +319,7 @@ let main_lwt () =
     Storage.set m'.Model.items;
     D3.run "body" m' view;
     m')
-  Event.stream init
+  stream init
 ;;
 
 
