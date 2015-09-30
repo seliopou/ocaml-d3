@@ -309,3 +309,20 @@ let main () =
 ;;
 
 main ()]}*)
+
+(** Tyxml interface *)
+module Tyxml : sig
+
+  module type S = sig
+    type 'a elt
+    val run : _ elt -> 'a -> ('a, _) t -> unit
+    val html : ('a, _ elt) fn -> ('a, 'a) t
+  end
+
+  module type CASTABLE = sig
+    type 'a elt
+    val of_element : 'a elt -> Dom_html.element Js.t
+  end
+
+  module Make (C : CASTABLE) : S with type 'a elt := 'a C.elt
+end

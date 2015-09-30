@@ -189,3 +189,38 @@ let run selector data t =
   in
   ignore (t cxt)
 ;;
+
+
+module Tyxml = struct
+
+  module type S = sig
+    type 'a elt
+    val run : _ elt -> 'a -> ('a, _) t -> unit
+    val html : ('a, _ elt) fn -> ('a, 'a) t
+  end
+
+  module type CASTABLE = sig
+    type 'a elt
+    val of_element : 'a elt -> Dom_html.element Js.t
+  end
+
+  module Make ( C : CASTABLE) : S with type 'a elt := 'a C.elt = struct
+
+    let run node data t =
+      let cxt =
+        let open Js.Unsafe in
+        meth_call
+          (d3_select (C.of_element node))
+          "datum" [| inject data |]
+      in
+      ignore (t cxt)
+
+    let html f =
+      const_call "html" ( mb (
+          fun this d i () ->
+            (C.of_element (f this d i))##outerHTML
+        ))
+
+
+  end
+end
