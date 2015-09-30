@@ -620,4 +620,14 @@ let dispatch_default = MyOCamlbuildBase.dispatch_default conf package_default;;
 
 # 622 "myocamlbuild.ml"
 (* OASIS_STOP *)
-Ocamlbuild_plugin.dispatch dispatch_default;;
+let examples = [
+  "rectangle" ;
+  "todo" ;
+]
+
+let () =
+  Ocamlbuild_plugin.dispatch (fun hook ->
+    dispatch_default hook;
+    Ocamlbuild_js_of_ocaml.dispatcher
+      ~oasis_executables:(List.map (fun x -> "examples/"^x^".byte") examples) hook
+  )

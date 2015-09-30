@@ -37,11 +37,10 @@ reconfigure the build process:
 
 ```bash
 ./configure --enable-examples
-make && js_of_ocaml rectangle.byte && js_of_ocaml todo.byte
+make && $BROWSER examples/rectangle.html
 ```
 
-Load the resultant JavaScript files into a blank HTML document and you're good
-to go&mdash;though [styling the TodoMVC app][css] will make it easier on the eyes.
+And you're good to go&mdash;though [styling the TodoMVC app][css] will make it easier on the eyes.
 
 [css]: https://github.com/tastejs/todomvc-app-css/blob/master/index.css
 
