@@ -11,6 +11,9 @@ License:     BSD-3-clause
 Plugins:     META (0.4), DevFiles (0.4)
 BuildTools: ocamlbuild
 
+AlphaFeatures: ocamlbuild_more_args
+XOCamlbuildPluginTags: package(js_of_ocaml.ocamlbuild)
+
 Flag examples
   Description:  build example programs
   Default:      false
