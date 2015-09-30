@@ -31,7 +31,7 @@
     POSSIBILITY OF SUCH DAMAGE.
   ----------------------------------------------------------------------------*)
 
-type 'a s = S
+type 'a s = < > Js.t
 
 type ('a, 'b) t = 'a s -> 'b s
 type ('a, 'b) fn = Dom.node Js.t -> 'a -> int -> 'b
@@ -203,6 +203,9 @@ let run ?(node=Js.Unsafe.global##document##documentElement) t data =
 ;;
 
 module Unsafe = struct
+
+  let to_ f x = Js.Unsafe.(coerce @@ f @@ coerce x)
+  let from_ d x = Js.Unsafe.(coerce @@ d @@ coerce x)
 
   let enter = raw_enter
   let select = raw_select

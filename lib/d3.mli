@@ -309,6 +309,9 @@ main ()]} *)
 
 module Unsafe : sig
 
+  val to_ : (< .. > Js.t -> < .. > Js.t) -> ('a, 'b) t
+  val from_ : ('a, 'b) t -> (< .. > Js.t -> < .. > Js.t)
+
   val enter : ('a, 'a) t
   (** See
       {{:https://github.com/mbostock/d3/wiki/Selections#enter}D3.js docs}

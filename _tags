@@ -1,5 +1,5 @@
 # OASIS_START
-# DO NOT EDIT (digest: dfbd44d633cf98249ea483c76d5f22b6)
+# DO NOT EDIT (digest: f1f4f0b8b5da45fe513b94aeda68895d)
 # Ignore VCS directories, you can use the same kind of rule outside
 # OASIS_START/STOP if you want to exclude directories that contains
 # useless stuff for the build process
@@ -16,8 +16,12 @@ true: annot, bin_annot
 "_darcs": not_hygienic
 # Library d3
 "lib/d3.cmxs": use_d3
+# Library d3_tyxml
+"lib/d3_tyxml.cmxs": use_d3_tyxml
 <lib/*.ml{,i,y}>: package(js_of_ocaml)
 <lib/*.ml{,i,y}>: package(js_of_ocaml.syntax)
+<lib/*.ml{,i,y}>: package(tyxml)
+<lib/*.ml{,i,y}>: use_d3
 # Executable rectangle
 "examples/rectangle.byte": package(js_of_ocaml)
 "examples/rectangle.byte": package(js_of_ocaml.syntax)
@@ -28,9 +32,17 @@ true: annot, bin_annot
 "examples/todo.byte": package(lwt)
 "examples/todo.byte": package(yojson)
 "examples/todo.byte": use_d3
-<examples/*.ml{,i,y}>: package(js_of_ocaml)
-<examples/*.ml{,i,y}>: package(js_of_ocaml.syntax)
 <examples/*.ml{,i,y}>: package(lwt)
 <examples/*.ml{,i,y}>: package(yojson)
+# Executable tyxml
+"examples/tyxml.byte": package(js_of_ocaml)
+"examples/tyxml.byte": package(js_of_ocaml.syntax)
+"examples/tyxml.byte": package(tyxml)
+"examples/tyxml.byte": use_d3
+"examples/tyxml.byte": use_d3_tyxml
+<examples/*.ml{,i,y}>: package(js_of_ocaml)
+<examples/*.ml{,i,y}>: package(js_of_ocaml.syntax)
+<examples/*.ml{,i,y}>: package(tyxml)
 <examples/*.ml{,i,y}>: use_d3
+<examples/*.ml{,i,y}>: use_d3_tyxml
 # OASIS_STOP

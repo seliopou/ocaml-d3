@@ -24,6 +24,13 @@ Library d3
   Modules:      D3
   BuildDepends: js_of_ocaml, js_of_ocaml.syntax
 
+Library d3_tyxml
+  Path:         lib
+  Findlibname:  tyxml
+  Findlibparent:d3
+  Modules:      D3_tyxml
+  BuildDepends: d3, tyxml
+
 Document d3
   Title:                D3 Docs
   Type:                 ocamlbuild (0.4)
@@ -47,6 +54,14 @@ Executable todo
   CompiledObject:   byte
   Install:          false
   BuildDepends:     d3, lwt, js_of_ocaml, yojson
+
+Executable tyxml
+  Path:             examples
+  MainIs:           tyxml.ml
+  Build$:           flag(examples)
+  CompiledObject:   byte
+  Install:          false
+  BuildDepends:     d3.tyxml
 
 SourceRepository master
   Type:     git
