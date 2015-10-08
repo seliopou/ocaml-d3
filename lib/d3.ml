@@ -134,9 +134,7 @@ let static name =
     if thunk_call "size" that = 0 then
       ignore ((append name <.> str attr "ocaml-d3-gensym" gensym_) this)
   in
-  fun cxt ->
-    let _ = const_call "each" (mb f) cxt in
-    select selector cxt
+  _seq (each f) (select selector)
 ;;
 
 module E = struct
