@@ -196,11 +196,16 @@ val filter : ('a, bool) fn -> ('a, 'a) t
 
     {{:https://github.com/mbostock/d3/wiki/Selections#filter}D3.js docs} *)
 
-val sort   : ('a -> 'a -> int) -> ('a, 'a) t
+val sort : ('a -> 'a -> int) -> ('a, 'a) t
 (** [sort f] sorts the elements in the current selection according to the
     comparator function, and then re-inserts the document elements to match.
 
    {{:https://github.com/mbostock/d3/wiki/Selections#sort}D3.js docs} *)
+
+val each : ('a, unit) fn -> ('a, 'a) t
+(** [each f] invokes [f] for each element in the current selection.
+
+   {{:https://github.com/mbostock/d3/wiki/Selections#each}D3.js docs} *)
 
 (** {2 Composition operators} *)
 

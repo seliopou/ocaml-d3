@@ -79,6 +79,7 @@ let exit   : ('a, 'a) t = thunk_call "exit"
 
 let filter f = const_call "filter" (mb (fun this d i () -> Js.bool (f this d i)))
 let sort   f = const_call "sort"   f
+let each   f = const_call "each"   (mb (fun this d i () -> (f this d i)))
 
 let str f name x = f name (fun _ _ _ -> x)
 let int f name x = str f name (string_of_int x)
