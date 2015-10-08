@@ -298,7 +298,7 @@ let main_lazy () =
    * the code above without lwt, which will improve performance by a bit. *)
   let model = ref { Model.init with Model.items = Storage.get () } in
   let rec go () =
-    D3.run !model (Lazy.force view)
+    D3.run (Lazy.force view) !model
   and view = lazy (View.make (fun e ->
     model := Event.handle e !model;
     Storage.set (!model).Model.items;
@@ -314,11 +314,11 @@ let main_lwt () =
   in
   let view = View.make push in
   let init = { Model.init with Model.items = Storage.get () } in
-  D3.run init view;
+  D3.run view init;
   Lwt_stream.fold (fun e m ->
     let m' = Event.handle e m in
     Storage.set m'.Model.items;
-    D3.run m' view;
+    D3.run view m';
     m')
   stream init
 ;;

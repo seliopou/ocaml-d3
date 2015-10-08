@@ -298,8 +298,8 @@ module E : sig
   val handle : string -> (Dom_html.event, 'a) handler -> ('a, 'a) t
 end
 
-val run : ?node:Dom.node Js.t -> 'a -> ('a, _) t -> unit
-(** [run ?node datum op] binds [datum] to [node] and runs [op] on that element.
+val run : ?node:Dom.node Js.t -> ('a, _) t -> 'a -> unit
+(** [run ?node op datum] binds [datum] to [node] and runs [op] on that element.
     If [node] is not provided, then the current document node will be used
     instead.
 

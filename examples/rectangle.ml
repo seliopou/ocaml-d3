@@ -22,4 +22,4 @@ let view dims padding =
 ;;
 
 let _ =
-  run () (view { width = 300; height = 300 } 20)
+  run (view { width = 300; height = 300 } 20) ()

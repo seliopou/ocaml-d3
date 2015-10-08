@@ -181,7 +181,7 @@ module E = struct
   let handle name f = _handler name f
 end
 
-let run ?(node=Js.Unsafe.global##document) data t =
+let run ?(node=Js.Unsafe.global##document) t data =
   let cxt =
     let open Js.Unsafe in
     meth_call
