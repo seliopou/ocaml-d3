@@ -3,3 +3,4 @@ B _build/**
 PKG js_of_ocaml
 PKG yojson
 PKG lwt
+PKG js_of_ocaml.tyxml
