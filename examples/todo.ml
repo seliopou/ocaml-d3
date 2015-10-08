@@ -260,7 +260,8 @@ module View = struct
     |. html (fun _ _ _ -> content)
 
   let make k =
-    seq [todoapp k; low_footer]
+    nest (select "body")
+      [todoapp k; low_footer]
 end
 
 module Storage : sig
@@ -297,7 +298,7 @@ let main_lazy () =
    * the code above without lwt, which will improve performance by a bit. *)
   let model = ref { Model.init with Model.items = Storage.get () } in
   let rec go () =
-    D3.run "body" !model (Lazy.force view)
+    D3.run !model (Lazy.force view)
   and view = lazy (View.make (fun e ->
     model := Event.handle e !model;
     Storage.set (!model).Model.items;
@@ -313,15 +314,14 @@ let main_lwt () =
   in
   let view = View.make push in
   let init = { Model.init with Model.items = Storage.get () } in
-  D3.run "body" init view;
+  D3.run init view;
   Lwt_stream.fold (fun e m ->
     let m' = Event.handle e m in
     Storage.set m'.Model.items;
-    D3.run "body" m' view;
+    D3.run m' view;
     m')
   stream init
 ;;
-
 
 let _ =
   Lwt_js_events.async main_lwt

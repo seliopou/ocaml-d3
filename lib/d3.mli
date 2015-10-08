@@ -298,11 +298,14 @@ module E : sig
   val handle : string -> (Dom_html.event, 'a) handler -> ('a, 'a) t
 end
 
-val run : string -> 'a -> ('a, _) t -> unit
-(** [run selector datum op] selects the first element that matches [selector],
-    binds [datum] to it, and runs [op] on that element. This is the only way to
-    run a D3.t operation. It can be used in a variety of contexts, however its
-    indended use is in an event loop of an application, along these lines:
+val run : ?node:Dom.node Js.t -> 'a -> ('a, _) t -> unit
+(** [run ?node datum op] binds [datum] to [node] and runs [op] on that element.
+    If [node] is not provided, then the current document node will be used
+    instead.
+
+    This is the only way to run a D3.t operation. It can be used in a variety
+    of contexts, however its indended use is in an event loop of an
+    application, along these lines:
 
 {[
 let main () =
@@ -313,4 +316,4 @@ let main () =
     D3.run "body" !model view)
 ;;
 
-main ()]}*)
+main ()]} *)

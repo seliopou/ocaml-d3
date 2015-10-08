@@ -17,8 +17,9 @@ let view dims padding =
     |. int attr "x"      padding
     |. int attr "y"      padding
   in
-  svg <.> rect
+  select "body"
+  |. svg <.> rect
 ;;
 
 let _ =
-  run "body" () (view { width = 300; height = 300 } 20)
+  run () (view { width = 300; height = 300 } 20)
