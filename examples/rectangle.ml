@@ -17,9 +17,8 @@ let view dims padding =
     |. int attr "x"      padding
     |. int attr "y"      padding
   in
-  select "body"
-  |. svg <.> rect
+  svg <.> rect
 ;;
 
 let _ =
-  run (view { width = 300; height = 300 } 20) ()
+  run ~node:(Dom_html.document##body) (view { width = 300; height = 300 } 20) ()
