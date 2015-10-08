@@ -179,11 +179,11 @@ module E = struct
   let handle name f = _handler name f
 end
 
-let run selector data t =
+let run ?(node=Js.Unsafe.global##document) t data =
   let cxt =
     let open Js.Unsafe in
     meth_call
-      (d3_select (Js.string selector))
+      (d3_select node)
       "datum" [| inject data |]
   in
   ignore (t cxt)
