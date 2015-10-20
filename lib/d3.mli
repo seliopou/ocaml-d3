@@ -163,7 +163,7 @@ val static : string -> ('a, 'a) t
 val data  : ('a -> int -> 'b list) -> ('a, 'b) t
 (** {{:https://github.com/mbostock/d3/wiki/Selections#data}D3.js docs} *)
 
-val datum : ('a -> int -> 'b list) -> ('a, 'b) t
+val datum : ('a -> int -> 'b) -> ('a, 'b) t
 (** {{:https://github.com/mbostock/d3/wiki/Selections#datum}D3.js docs} *)
 
 val enter : ('a, 'a) t

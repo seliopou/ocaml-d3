@@ -70,7 +70,7 @@ let html f = const_call "html" (mb (fun this d i () -> Js.string (f this d i)))
 let append name         = const_call "append" (Js.string name)
 let remove : ('a, 'a) t = thunk_call "remove"
 
-let datum f = const_call "datum" (fun d i -> Js.array (Array.of_list (f d i)))
+let datum f = const_call "datum" (fun d i -> f d i)
 let data  f = const_call "data"  (fun d i -> Js.array (Array.of_list (f d i)))
 
 let enter  : ('a, 'a) t = thunk_call "enter"
