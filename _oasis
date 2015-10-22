@@ -47,3 +47,8 @@ Executable todo
   CompiledObject:   byte
   Install:          false
   BuildDepends:     d3, lwt, js_of_ocaml, yojson
+
+SourceRepository master
+  Type:     git
+  Location: https://github.com/inhabitedtype/ocaml-d3.git
+  Browser:  https://github.com/inhabitedtype/ocaml-d3
