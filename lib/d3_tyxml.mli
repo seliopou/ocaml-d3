@@ -11,6 +11,8 @@ module Svg : sig
 
   val d3 : ('data -> int -> _ elt) -> ('data, 'data) t
   val d3' : _ elt -> ('data, 'data) t
+  val enter : ('data -> int -> _ elt) -> ('data, 'data) t
+  val enter' : _ elt -> ('data, 'data) t
 
 end
 
@@ -22,5 +24,7 @@ module Html5 : sig
 
   val d3 : ('data -> int -> _ elt) -> ('data, 'data) t
   val d3' : _ elt -> ('data, 'data) t
+  val enter : ('data -> int -> _ elt) -> ('data, 'data) t
+  val enter' : _ elt -> ('data, 'data) t
 
 end

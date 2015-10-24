@@ -87,20 +87,21 @@ module Xml = struct
 
 end
 
-(* (\* The enter selection doesn't define "each", so we iterate manually instead. *\) *)
-(* let each (type data) (fn : _ -> data -> int -> 'b s) (ctx : data s) : data s = *)
-(*   let groups : 'a #Js.js_array Js.t = Js.Unsafe.coerce ctx in *)
-(*   groups##forEach (fun group j _ -> *)
-(*     group##forEach (fun node i _ -> *)
-(*       Js.Optdef.iter node (fun n -> *)
-(*         let x = Js.Unsafe.get n "__data__" in *)
-(*         print_endline @@ Obj.magic x ; *)
-(*         print_endline @@ Obj.magic node ; *)
-(*         ignore @@ fn n x i *)
-(*       ) *)
-(*     ) *)
-(*   ) ; *)
-(*   ctx *)
+(* The enter selection doesn't define "each", so we iterate manually instead. *)
+let iter_selection (fn : 'data -> int -> _) =
+  let f ctx =
+    let groups : 'a #Js.js_array Js.t = Js.Unsafe.coerce ctx in
+    groups##forEach (fun group j _ ->
+      group##forEach (fun node i _ ->
+        Js.Optdef.iter node (fun n ->
+          let data = Js.Unsafe.get n "__data__" in
+          ignore @@ fn data i ctx
+        )
+      )
+    ) ;
+    ctx
+  in
+  Unsafe.to_ f
 
 let d3_select arg =
   Js.Unsafe.(meth_call global##d3 "select" [| inject arg |])
@@ -126,6 +127,12 @@ module Make (M : S) = struct
     rebind f
 
   let d3' e = d3 @@ fun _ _ -> e
+
+  let enter (fn : 'data -> int -> _ M.elt) : ('data, 'data) t =
+    let f d i = M.toelt (fn d i) in
+    Unsafe.enter |- iter_selection f
+
+  let enter' e = enter @@ fun _ _ -> e
 
 end
 
