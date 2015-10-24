@@ -1,5 +1,7 @@
 open D3
 
+module S = D3_tyxml.Svg
+
 type dims =
   { width : int; height : int }
 
@@ -18,7 +20,7 @@ let view =
     |. attr "width" (fun _ l _ -> string_of_int @@ l * 300)
     |. attr "height"  (fun _ l _ -> string_of_int 300 )
   in
-  let rect (dims, pos, padding) _ =
+  let rect (dims, pos, padding) _ = let open S in
     rect ~a:[
       a_fill (`Color ("black", None)) ;
       a_x (float @@ pos + padding, None) ;
@@ -28,9 +30,8 @@ let view =
     ] []
   in
   svg |. (
-    selectAll "rect"
-    |. data (fun i _ -> make_dims i)
-    |- nest enter [with_svg rect]
+    data "rect" (fun i _ -> make_dims i)
+    |- S.enter rect
     |- nest exit [remove]
   )
 ;;

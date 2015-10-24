@@ -45,7 +45,7 @@ Executable rectangle
   Build$:           flag(examples)
   CompiledObject:   byte
   Install:          false
-  BuildDepends:     d3, js_of_ocaml
+  BuildDepends:     d3.tyxml
 
 Executable todo
   Path:             examples

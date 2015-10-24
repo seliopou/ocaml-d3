@@ -1,5 +1,5 @@
 # OASIS_START
-# DO NOT EDIT (digest: f1f4f0b8b5da45fe513b94aeda68895d)
+# DO NOT EDIT (digest: cd8e2753a718ffe1b2b87d117a446446)
 # Ignore VCS directories, you can use the same kind of rule outside
 # OASIS_START/STOP if you want to exclude directories that contains
 # useless stuff for the build process
@@ -25,7 +25,9 @@ true: annot, bin_annot
 # Executable rectangle
 "examples/rectangle.byte": package(js_of_ocaml)
 "examples/rectangle.byte": package(js_of_ocaml.syntax)
+"examples/rectangle.byte": package(tyxml)
 "examples/rectangle.byte": use_d3
+"examples/rectangle.byte": use_d3_tyxml
 # Executable todo
 "examples/todo.byte": package(js_of_ocaml)
 "examples/todo.byte": package(js_of_ocaml.syntax)
