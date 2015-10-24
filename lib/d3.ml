@@ -56,8 +56,8 @@ let thunk_call (meth:string) cxt =
 
 let mb = Js.wrap_meth_callback
 
-let select    name = const_call "select"    (Js.string name)
-let selectAll name = const_call "selectAll" (Js.string name)
+let raw_select    name = const_call "select"    (Js.string name)
+let raw_selectAll name = const_call "selectAll" (Js.string name)
 
 let attr     name f = name_call "attr"     name (mb (fun this d i () -> Js.string (f this d i)))
 let classed  name f = name_call "classed"  name (mb (fun this d i () -> Js.bool   (f this d i)))
@@ -70,10 +70,10 @@ let html f = const_call "html" (mb (fun this d i () -> Js.string (f this d i)))
 let append name         = const_call "append" (Js.string name)
 let remove : ('a, 'a) t = thunk_call "remove"
 
-let datum f = const_call "datum" (fun d i -> f d i)
-let data  f = const_call "data"  (fun d i -> Js.array (Array.of_list (f d i)))
+let raw_datum f = const_call "datum" (fun d i -> f d i)
+let raw_data  f = const_call "data"  (fun d i -> Js.array (Array.of_list (f d i)))
 
-let enter  : ('a, 'a) t = thunk_call "enter"
+let raw_enter  : ('a, 'a) t = thunk_call "enter"
 let update : ('a, 'a) t = fun x -> x
 let exit   : ('a, 'a) t = thunk_call "exit"
 
@@ -130,12 +130,25 @@ let static name =
   let selector = name ^ "[ocaml-d3-gensym=\"" ^ gensym_ ^ "\"]"in
   let f this _ _ =
     let this = d3_select this in
-    let that = select selector this in
+    let that = raw_select selector this in
     if thunk_call "size" that = 0 then
       ignore ((append name <.> str attr "ocaml-d3-gensym" gensym_) this)
   in
-  _seq (each f) (select selector)
+  _seq (each f) (raw_select selector)
 ;;
+
+
+let enter s = raw_enter <.> append s
+
+let data ?(all=true) s fn =
+  if all
+  then raw_selectAll s <.> raw_data fn
+  else raw_select s <.> raw_data fn
+
+let datum ?(all=true) s fn =
+  if all
+  then raw_selectAll s <.> raw_datum fn
+  else raw_select s <.> raw_datum fn
 
 module E = struct
   type ('event, 'a) handler = 'event Js.t -> 'a -> int -> unit
@@ -188,3 +201,13 @@ let run ?(node=Js.Unsafe.global##document##documentElement) t data =
   in
   ignore (t cxt)
 ;;
+
+module Unsafe = struct
+
+  let enter = raw_enter
+  let select = raw_select
+  let selectAll = raw_selectAll
+  let data = raw_data
+  let datum = raw_datum
+
+end

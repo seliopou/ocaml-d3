@@ -42,25 +42,18 @@ type ('a, 'b) fn = Dom.node Js.t -> 'a -> int -> 'b
 (** A type alias for the sorts of functions that can be used to construct
     {!attr}, {!classed}, {!style}, and {!property}, selections below. *)
 
-val select : string -> ('a, 'a) t
-(** [select selector] selects the first descendant element that matches the
-    specified selector string, for each element in the selection. If the
-    current element has associated data, this data is inherited by the returned
-    subselection, and automatically bound to the newly selected elements. If
-    multiple elements match the selector, only the first matching element in
+val data : ?all:bool -> string -> ('a -> int -> 'b list) -> ('a, 'b) t
+(** [select ~all selector fn] selects descendant elements that match the
+    specified selector string, for each element in the selection, and use [fn]
+    to bind data to it.
+
+    If [all] is [true] (the default), all the elements are selected matching
+    [selector] are selected, otherwise only the first matching element in
     document traversal order will be selected.
+*)
 
-    {{:https://github.com/mbostock/d3/wiki/Selections#select}D3.js docs} *)
-
-val selectAll : string -> ('a, 'a) t
-(** [selectAll selector] selects descendant elements that match the specified
-    selector string, for each element in the selection. The subselection does
-    not inherit data from the current selection; however, if the data value is
-    specified as a function, this function will be called with the data d of the
-    ancestor node and the group index i to determine the data bindings for the
-    subselection.
-
-    {{:https://github.com/mbostock/d3/wiki/Selections#selectAll}D3.js docs} *)
+val datum : ?all:bool -> string -> ('a -> int -> 'b) -> ('a, 'b) t
+(** Similar to {!data}, but does not computer enter and exit selections. *)
 
 val attr : string -> ('a, string) fn -> ('a, 'a) t
 (** [attr name f] sets the [name] attribute to the specified value on all
@@ -150,7 +143,7 @@ val static : string -> ('a, 'a) t
     Note that you can use multiple [static] operators to create elements with
     the same name.
 
-{[nest (select "body")
+{[nest (data "body" @@ fun d _i -> [d])
   [ static "div"
     |. text (fun _ _ _ -> "first div")
   ; static "div"
@@ -160,14 +153,9 @@ val static : string -> ('a, 'a) t
 
 (** {2 Data Binding} *)
 
-val data  : ('a -> int -> 'b list) -> ('a, 'b) t
-(** {{:https://github.com/mbostock/d3/wiki/Selections#data}D3.js docs} *)
-
-val datum : ('a -> int -> 'b) -> ('a, 'b) t
-(** {{:https://github.com/mbostock/d3/wiki/Selections#datum}D3.js docs} *)
-
-val enter : ('a, 'a) t
-(** [enter] returns the enter selection: placeholder nodes for each data
+val enter : string -> ('a, 'a) t
+(** [enter s] gets the enter selection and append [s] to it. The enter
+    selection is composed of placeholder nodes for each data
     element for which no corresponding existing DOM element was found in the
     current selection. This operation can only be composed below an update
     selection, which is produced by the {!data} operator.
@@ -233,14 +221,14 @@ val flt : (string -> ('a, string) fn -> ('a, 'a) t) -> string -> float  -> ('a, 
     {!attr}, and {!style} functions when dealing with constant values. That way
     you can write code like this:
 
-{[selectAll "rect"
+{[data "rect" (fun d _ -> [d])
 |. int attr  "height" height
 |. int attr  "width"  height
 |. str style "fill"   "blue"]}
 
     rather than this:
 
-{[selectAll "rect"
+{[data "rect" (fun d _ -> [d])
 |. attr  "height" (fun _ _ _ -> string_of_int height)
 |. attr  "width"  (fun _ _ _ -> string_of_int width)
 |. style "fill"   (fun _ _ _ -> "blue")]} *)
@@ -317,3 +305,32 @@ let main () =
 ;;
 
 main ()]} *)
+
+
+module Unsafe : sig
+
+  val enter : ('a, 'a) t
+  (** See
+      {{:https://github.com/mbostock/d3/wiki/Selections#enter}D3.js docs}
+  *)
+
+  val select : string -> ('a, 'a) t
+  (** See
+      {{:https://github.com/mbostock/d3/wiki/Selections#select}D3.js docs}
+  *)
+
+  val selectAll : string -> ('a, 'a) t
+  (** See
+      {{:https://github.com/mbostock/d3/wiki/Selections#selectAll}D3.js docs}
+  *)
+
+  val data : ('a -> int -> 'b list) -> ('a, 'b) t
+  (** See
+      (** {{:https://github.com/mbostock/d3/wiki/Selections#data}D3.js docs} *)
+  *)
+
+  val datum : ('a -> int -> 'b) -> ('a, 'b) t
+  (** See
+      {{:https://github.com/mbostock/d3/wiki/Selections#datum}D3.js docs}
+  *)
+end
