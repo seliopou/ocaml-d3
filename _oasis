@@ -1,6 +1,6 @@
 OASISFormat: 0.4
 Name:        d3
-Version:     0.2.0
+Version:     0.2.1
 OCamlVersion: >= 4.01.0
 Synopsis:    OCaml bindings for D3.js
 Authors:     Spiros Eliopoulos <seliopou@gmail.com>
