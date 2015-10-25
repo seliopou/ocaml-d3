@@ -37,7 +37,7 @@ Document d3
   BuildTools+:          ocamldoc
   Install:              true
   XOCamlbuildPath:      lib
-  XOCamlbuildLibraries: d3
+  XOCamlbuildLibraries: d3, d3.tyxml
 
 Executable rectangle
   Path:             examples
