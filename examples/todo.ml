@@ -1,20 +1,44 @@
+(** The Model
+
+    This module contains data types and related operations for modeling the
+    state of the application. *)
 module Model = struct
+
+  (** Ways to filter items in the interface. *)
   type filter =
-    | All
-    | Active
-    | Completed
+    | All       (** Show all items. *)
+    | Active    (** Show active (incomplete) items. *)
+    | Completed (** Show completed items. *)
 
   let string_of_filter : filter -> string = function
     | All -> "All"
     | Active -> "Active"
     | Completed -> "Completed"
 
+  (** The model type for the Todo application.
+
+      The entire state of the application is contained in this type, and should
+      be considered the authoritative record of the application's state. *)
   type t =
-    { input   : string
-    ; items   : (string * bool) list
-    ; filter  : filter
-    ; editing : (string * int) option
-    ; toggle  : bool
+    { input   : string                (** The input for a new task description.
+                                          This should remain consistent with 
+                                          the [<input>] element the user
+                                          actually interacts with *)
+    ; items   : (string * bool) list  (** The items in the todo list. The first
+                                          tuple component is the description and
+                                          the second indicates whether the item
+                                          is complete ([true]) or incomplete
+                                          ([false]). *)
+    ; filter  : filter                (** The filter that should be applied to
+                                          the view. *)
+    ; editing : (string * int) option (** When an item's being edited, this
+                                          contains its description and index
+                                          into the {!items} list. *)
+
+    ; toggle  : bool                  (** Toggle button state. All items should
+                                          be marked complete if [true], and
+                                          incomplete otherwise. Only read when
+                                          modified. *)
     }
 
   let items_to_json is =
@@ -78,7 +102,22 @@ module Model = struct
     { t with toggle = not t.toggle }
 end
 
+(** The Events
+
+    This module contains data types for application-level events and a handler.
+    These events make no reference to how the user triggered the event, but
+    instead describe low-level UI interactions in the high-level language of
+    the application domain. For example, the {!Edit} event is triggered by a
+    double click on a particular DOM element. Rather than reporting that
+    low-level event, the view translates into something that makes sense within
+    the context of the application: begin editing the i-th item of the list. *)
 module Event = struct
+
+  (** The type of application-level events that the Todo application must
+      handle. The view code below must map DOM events to this data type.
+
+      Note that because events are represented as variants of a single type,
+      event handling code must be put in one place.  *)
   type t =
     | AddInput
     | ChangeInput of string
@@ -92,11 +131,8 @@ module Event = struct
     | Filter of Model.filter
     | Toggle
 
-  (* This is an event handler. It specifies how the model should be modified
-   * based on a high-level Event. Note that becuase events are represented as a
-   * variant of an algebraic data type, the type system requires you to put
-   * event-handling code all in one place. This will serve as the body of the
-   * application's event loop. *)
+  (** [handle event model] returns a new model that reflects the changes
+      encoded in [event]. *)
   let handle t m =
     match t with
       | AddInput      -> Model.add_item m
