@@ -10,3 +10,5 @@ setup.data
 *#*
 *.core
 *.cmt
+*.mldylib
+*.mllib

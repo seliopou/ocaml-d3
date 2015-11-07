@@ -1,5 +1,5 @@
 (* OASIS_START *)
-(* DO NOT EDIT (digest: 92d16c02e8150e80d5318bf0b796f736) *)
+(* DO NOT EDIT (digest: 5aef030901e956c6db541e2d55346d90) *)
 module OASISGettext = struct
 (* # 22 "src/oasis/OASISGettext.ml" *)
 
@@ -607,7 +607,8 @@ end
 open Ocamlbuild_plugin;;
 let package_default =
   {
-     MyOCamlbuildBase.lib_ocaml = [("d3", ["lib"], [])];
+     MyOCamlbuildBase.lib_ocaml =
+       [("d3", ["lib"], []); ("d3_tyxml", ["lib"], [])];
      lib_c = [];
      flags = [];
      includes = [("examples", ["lib"])]
@@ -618,11 +619,12 @@ let conf = {MyOCamlbuildFindlib.no_automatic_syntax = false}
 
 let dispatch_default = MyOCamlbuildBase.dispatch_default conf package_default;;
 
-# 622 "myocamlbuild.ml"
+# 623 "myocamlbuild.ml"
 (* OASIS_STOP *)
 let examples = [
   "rectangle" ;
   "todo" ;
+  "tyxml" ;
 ]
 
 let () =
