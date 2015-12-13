@@ -134,6 +134,16 @@ val append : string -> ('a, 'a) t
 
     {{:https://github.com/mbostock/d3/wiki/Selections#append}D3.js docs} *)
 
+val insert : before:string -> string -> ('a, 'a) t
+(** [insert ~before name] inserts a new [name] element before
+    the element matching the [before] selector, returning a new selection
+    containing the inserted elements. If [before] does not match any elements,
+    then the new element will be the last child as with {!append}. Each new
+    element inherits the data of the current elements (if any), in the same
+    manner as {!select}.
+
+    {{:https://github.com/mbostock/d3/wiki/Selections#insert}D3.js docs} *)
+
 val remove : ('a, 'a) t
 (** [remove] removes the elements in the current selection from the current
     document. Returns the current selection (the same elements that were
