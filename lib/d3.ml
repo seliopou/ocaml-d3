@@ -68,6 +68,7 @@ let text f = const_call "text" (mb (fun this d i () -> Js.string (f this d i)))
 let html f = const_call "html" (mb (fun this d i () -> Js.string (f this d i)))
 
 let append name         = const_call "append" (Js.string name)
+let insert ~before name = name_call  "insert" name (Js.string before)
 let remove : ('a, 'a) t = thunk_call "remove"
 
 let datum f = const_call "datum" (fun d i -> f d i)
