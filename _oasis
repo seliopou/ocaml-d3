@@ -50,5 +50,5 @@ Executable todo
 
 SourceRepository master
   Type:     git
-  Location: https://github.com/inhabitedtype/ocaml-d3.git
-  Browser:  https://github.com/inhabitedtype/ocaml-d3
+  Location: https://github.com/seliopou/ocaml-d3.git
+  Browser:  https://github.com/seliopou/ocaml-d3
