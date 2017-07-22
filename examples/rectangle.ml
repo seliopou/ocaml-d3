@@ -21,4 +21,4 @@ let view dims padding =
 ;;
 
 let _ =
-  run ~node:(Dom_html.document##body) (view { width = 300; height = 300 } 20) ()
+  run ~node:(Dom_html.document##.body) (view { width = 300; height = 300 } 20) ()
