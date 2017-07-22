@@ -1,6 +1,6 @@
 # OASIS_START
-# DO NOT EDIT (digest: 3e14c404f894ed74f1c36b3e535d4c48)
-version = "0.2.2"
+# DO NOT EDIT (digest: e5df9ea88e03ced1e3362cb2b633c524)
+version = "dev"
 description = "OCaml bindings for D3.js"
 requires = "js_of_ocaml-ocamlbuild js_of_ocaml-ppx"
 archive(byte) = "d3.cma"
