@@ -83,7 +83,9 @@ module Model = struct
   let commit_edit t =
     match t.editing with
     | None       -> assert false
-    | Some(s, i) -> { update_description t i s with editing = None }
+    | Some(s, i) -> 
+      let t' = update_description t i s in
+      { t' with editing = None }
 
   let cancel_edit t =
     { t with editing = None }
@@ -212,13 +214,13 @@ module View = struct
             |. str attr "class" "edit"
             |. property "value" (fun _ m i -> Js.string m.text)
             |. E.input (fun e _ _ ->
-                match Js.Opt.to_option e##target with
+                match Js.Opt.to_option e##.target with
                 | None   -> assert false
                 | Some t ->
                   let i = Js.coerce t Dom_html.CoerceTo.input (fun _ -> assert false) in
-                  k (Event.ChangeEdit (Js.to_string i##value)))
+                  k (Event.ChangeEdit (Js.to_string i##.value)))
             |. E.keyup (fun e _ _ ->
-                 match e##keyCode with
+                 match e##.keyCode with
                  | 27 -> k Event.CancelEdit (* ESC_KEY   *)
                  | 13 -> k Event.CommitEdit (* ENTER_KEY *)
                  | _  -> ())
@@ -258,13 +260,13 @@ module View = struct
            |. str attr "placeholder" "What needs to be done?"
            |. property "value" (fun _ m _ -> Js.string m.Model.input)
            |. E.input (fun e _ _ ->
-               match Js.Opt.to_option e##target with
+               match Js.Opt.to_option e##.target with
                | None   -> assert false
                | Some t ->
                  let i = Js.coerce t Dom_html.CoerceTo.input (fun _ -> assert false) in
-                 k (Event.ChangeInput (Js.to_string i##value)))
+                 k (Event.ChangeInput (Js.to_string i##.value)))
            |. E.keyup (fun e m i ->
-               if e##keyCode = 13
+               if e##.keyCode = 13
                  then k Event.AddInput
                  else ())
          ]
@@ -308,7 +310,7 @@ end = struct
   let key = string "todos-ocaml-d3"
 
   let storage =
-    Optdef.case (Dom_html.window##localStorage)
+    Optdef.case (Dom_html.window##.localStorage)
       (fun () -> None)
       (fun s  -> Some s)
 
@@ -325,7 +327,7 @@ end = struct
     match storage with
     | None   -> ()
     | Some s ->
-      s##setItem (key, string (Yojson.Basic.to_string (Model.items_to_json v)))
+      s##(setItem key (string (Yojson.Basic.to_string (Model.items_to_json v))))
 end
 
 let main_lazy () =
@@ -333,7 +335,7 @@ let main_lazy () =
    * the code above without lwt, which will improve performance by a bit. *)
   let model = ref { Model.init with Model.items = Storage.get () } in
   let rec go () =
-    D3.run ~node:(Dom_html.document##body) (Lazy.force view) !model
+    D3.run ~node:(Dom_html.document##.body) (Lazy.force view) !model
   and view = lazy (View.make (fun e ->
     model := Event.handle e !model;
     Storage.set (!model).Model.items;
@@ -349,7 +351,7 @@ let main_lwt () =
   in
   let view = View.make push in
   let init = { Model.init with Model.items = Storage.get () } in
-  let node = (Dom_html.document##body) in
+  let node = (Dom_html.document##.body) in
   D3.run ~node view init;
   Lwt_stream.fold (fun e m ->
     let m' = Event.handle e m in

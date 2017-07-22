@@ -22,7 +22,7 @@ Library d3
   Path:         lib
   Findlibname:  d3
   Modules:      D3
-  BuildDepends: js_of_ocaml, js_of_ocaml.syntax
+  BuildDepends: js_of_ocaml-ocamlbuild, js_of_ocaml-ppx
 
 Document d3
   Title:                D3 Docs
@@ -38,7 +38,7 @@ Executable rectangle
   Build$:           flag(examples)
   CompiledObject:   byte
   Install:          false
-  BuildDepends:     d3, js_of_ocaml
+  BuildDepends:     d3, js_of_ocaml-ppx
 
 Executable todo
   Path:             examples
@@ -46,7 +46,7 @@ Executable todo
   Build$:           flag(examples)
   CompiledObject:   byte
   Install:          false
-  BuildDepends:     d3, lwt, js_of_ocaml, yojson
+  BuildDepends:     d3, lwt, js_of_ocaml-lwt, js_of_ocaml-ppx, yojson
 
 SourceRepository master
   Type:     git

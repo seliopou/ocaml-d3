@@ -37,7 +37,7 @@ type ('a, 'b) t = 'a s -> 'b s
 type ('a, 'b) fn = Dom.node Js.t -> 'a -> int -> 'b
 
 let d3_select arg =
-  Js.Unsafe.(meth_call global##d3 "select" [| inject arg |])
+  Js.Unsafe.(meth_call global##.d3 "select" [| inject arg |])
 ;;
 
 let name_call (meth:string) (name:string) f =
@@ -142,7 +142,7 @@ module E = struct
   type ('event, 'a) handler = 'event Js.t -> 'a -> int -> unit
 
   let _handler name f =
-    let f' d i = f Js.Unsafe.global##d3##event d i in
+    let f' d i = f Js.Unsafe.global##.d3##.event d i in
     fun cxt -> name_call "on" name f' cxt
   ;;
 
@@ -180,7 +180,7 @@ module E = struct
   let handle name f = _handler name f
 end
 
-let run ?(node=Js.Unsafe.global##document##documentElement) t data =
+let run ?(node=Js.Unsafe.global##.document##.documentElement) t data =
   let cxt =
     let open Js.Unsafe in
     meth_call
