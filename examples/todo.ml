@@ -186,11 +186,9 @@ module View = struct
       | false, _   -> None)
 
   let items k =
-    selectAll "li"
-    |. data (fun m _ -> items_of_model m)
-    |- nest enter
-       [ append "li"
-         |. E.dblclick (fun _ _ i -> k (Event.Edit i)) ]
+    data "li" (fun m _ -> items_of_model m)
+    |- nest (enter "li")
+        [ E.dblclick (fun _ _ i -> k (Event.Edit i)) ]
     |- nest update
        [ classed "editing"   (fun _ m i -> m.editing)
        ; classed "completed" (fun _ m i -> m.completed)
@@ -229,20 +227,18 @@ module View = struct
        [ exit <.> remove ]
 
   let filters k =
-    selectAll "li"
-    |. data (fun m _ ->
-        let open Model in
-        [ (All      , m.filter = All      , "#/")
-        ; (Active   , m.filter = Active   , "#/active")
-        ; (Completed, m.filter = Completed, "#/completed")
-        ])
-    |- nest enter
-       [ append "li"
-         |. append "a"
-         |. attr "href" (fun _ (_, _, href) _ -> href)
-         |. text (fun _ (f, _, _) _ -> Model.string_of_filter f) ]
+    data "li" (fun m _ ->
+      let open Model in
+      [ (All      , m.filter = All      , "#/")
+      ; (Active   , m.filter = Active   , "#/active")
+      ; (Completed, m.filter = Completed, "#/completed")
+      ])
+    |- nest (enter "li")
+        [ append "a"
+          |. attr "href" (fun _ (_, _, href) _ -> href)
+          |. text (fun _ (f, _, _) _ -> Model.string_of_filter f) ]
     |- nest update
-       [ select "a"
+       [ data "a" (fun d _ -> [d])
          |. classed "selected" (fun _ (_, active, _) _ -> active) ]
          |. E.click (fun _ (f,_,_) _ -> k (Event.Filter f))
     |- nest exit
