@@ -614,7 +614,7 @@ module MyOCamlbuildFindlib = struct
     "camlp4.mapgenerator";
     "camlp4.metagenerator";
     "camlp4.profiler";
-    "camlp4.tracer"
+    "camlp4.tracer";
   ]
 
 
@@ -895,6 +895,7 @@ let dispatch_default = MyOCamlbuildBase.dispatch_default conf package_default;;
 let examples = [
   "rectangle" ;
   "todo" ;
+  "line_graph";
 ]
 
 let () =

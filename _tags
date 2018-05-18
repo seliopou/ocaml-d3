@@ -29,6 +29,13 @@ true: annot, bin_annot
 "examples/todo.byte": package(lwt)
 "examples/todo.byte": package(yojson)
 "examples/todo.byte": use_d3
+# Executable line_graph
+"examples/line_graph.byte": package(js_of_ocaml-lwt)
+"examples/line_graph.byte": package(js_of_ocaml-ocamlbuild)
+"examples/line_graph.byte": package(js_of_ocaml-ppx)
+"examples/line_graph.byte": package(lwt)
+"examples/line_graph.byte": package(yojson)
+"examples/line_graph.byte": use_d3
 <examples/*.ml{,i,y}>: package(js_of_ocaml-lwt)
 <examples/*.ml{,i,y}>: package(js_of_ocaml-ocamlbuild)
 <examples/*.ml{,i,y}>: package(js_of_ocaml-ppx)

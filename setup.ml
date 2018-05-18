@@ -7231,6 +7231,151 @@ let setup_t =
                    {exec_custom = false; exec_main_is = "rectangle.ml"});
                Executable
                  ({
+                     cs_name = "line_graph";
+                     cs_data = PropList.Data.create ();
+                     cs_plugin_data = []
+                  },
+                   {
+                      bs_build =
+                        [
+                           (OASISExpr.EBool true, false);
+                           (OASISExpr.EFlag "examples", true)
+                        ];
+                      bs_install = [(OASISExpr.EBool true, false)];
+                      bs_path = "examples";
+                      bs_compiled_object = Byte;
+                      bs_build_depends =
+                        [
+                           InternalLibrary "d3";
+                           FindlibPackage ("lwt", None);
+                           FindlibPackage ("js_of_ocaml-lwt", None);
+                           FindlibPackage ("js_of_ocaml-ppx", None);
+                           FindlibPackage ("yojson", None)
+                        ];
+                      bs_build_tools = [ExternalTool "ocamlbuild"];
+                      bs_interface_patterns =
+                        [
+                           {
+                              OASISSourcePatterns.Templater.atoms =
+                                [
+                                   OASISSourcePatterns.Templater.Text "";
+                                   OASISSourcePatterns.Templater.Expr
+                                     (OASISSourcePatterns.Templater.Call
+                                        ("capitalize_file",
+                                          OASISSourcePatterns.Templater.Ident
+                                            "module"));
+                                   OASISSourcePatterns.Templater.Text ".mli"
+                                ];
+                              origin = "${capitalize_file module}.mli"
+                           };
+                           {
+                              OASISSourcePatterns.Templater.atoms =
+                                [
+                                   OASISSourcePatterns.Templater.Text "";
+                                   OASISSourcePatterns.Templater.Expr
+                                     (OASISSourcePatterns.Templater.Call
+                                        ("uncapitalize_file",
+                                          OASISSourcePatterns.Templater.Ident
+                                            "module"));
+                                   OASISSourcePatterns.Templater.Text ".mli"
+                                ];
+                              origin = "${uncapitalize_file module}.mli"
+                           }
+                        ];
+                      bs_implementation_patterns =
+                        [
+                           {
+                              OASISSourcePatterns.Templater.atoms =
+                                [
+                                   OASISSourcePatterns.Templater.Text "";
+                                   OASISSourcePatterns.Templater.Expr
+                                     (OASISSourcePatterns.Templater.Call
+                                        ("capitalize_file",
+                                          OASISSourcePatterns.Templater.Ident
+                                            "module"));
+                                   OASISSourcePatterns.Templater.Text ".ml"
+                                ];
+                              origin = "${capitalize_file module}.ml"
+                           };
+                           {
+                              OASISSourcePatterns.Templater.atoms =
+                                [
+                                   OASISSourcePatterns.Templater.Text "";
+                                   OASISSourcePatterns.Templater.Expr
+                                     (OASISSourcePatterns.Templater.Call
+                                        ("uncapitalize_file",
+                                          OASISSourcePatterns.Templater.Ident
+                                            "module"));
+                                   OASISSourcePatterns.Templater.Text ".ml"
+                                ];
+                              origin = "${uncapitalize_file module}.ml"
+                           };
+                           {
+                              OASISSourcePatterns.Templater.atoms =
+                                [
+                                   OASISSourcePatterns.Templater.Text "";
+                                   OASISSourcePatterns.Templater.Expr
+                                     (OASISSourcePatterns.Templater.Call
+                                        ("capitalize_file",
+                                          OASISSourcePatterns.Templater.Ident
+                                            "module"));
+                                   OASISSourcePatterns.Templater.Text ".mll"
+                                ];
+                              origin = "${capitalize_file module}.mll"
+                           };
+                           {
+                              OASISSourcePatterns.Templater.atoms =
+                                [
+                                   OASISSourcePatterns.Templater.Text "";
+                                   OASISSourcePatterns.Templater.Expr
+                                     (OASISSourcePatterns.Templater.Call
+                                        ("uncapitalize_file",
+                                          OASISSourcePatterns.Templater.Ident
+                                            "module"));
+                                   OASISSourcePatterns.Templater.Text ".mll"
+                                ];
+                              origin = "${uncapitalize_file module}.mll"
+                           };
+                           {
+                              OASISSourcePatterns.Templater.atoms =
+                                [
+                                   OASISSourcePatterns.Templater.Text "";
+                                   OASISSourcePatterns.Templater.Expr
+                                     (OASISSourcePatterns.Templater.Call
+                                        ("capitalize_file",
+                                          OASISSourcePatterns.Templater.Ident
+                                            "module"));
+                                   OASISSourcePatterns.Templater.Text ".mly"
+                                ];
+                              origin = "${capitalize_file module}.mly"
+                           };
+                           {
+                              OASISSourcePatterns.Templater.atoms =
+                                [
+                                   OASISSourcePatterns.Templater.Text "";
+                                   OASISSourcePatterns.Templater.Expr
+                                     (OASISSourcePatterns.Templater.Call
+                                        ("uncapitalize_file",
+                                          OASISSourcePatterns.Templater.Ident
+                                            "module"));
+                                   OASISSourcePatterns.Templater.Text ".mly"
+                                ];
+                              origin = "${uncapitalize_file module}.mly"
+                           }
+                        ];
+                      bs_c_sources = [];
+                      bs_data_files = [];
+                      bs_findlib_extra_files = [];
+                      bs_ccopt = [(OASISExpr.EBool true, [])];
+                      bs_cclib = [(OASISExpr.EBool true, [])];
+                      bs_dlllib = [(OASISExpr.EBool true, [])];
+                      bs_dllpath = [(OASISExpr.EBool true, [])];
+                      bs_byteopt = [(OASISExpr.EBool true, [])];
+                      bs_nativeopt = [(OASISExpr.EBool true, [])]
+                   },
+                   {exec_custom = false; exec_main_is = "line_graph.ml"});
+               Executable
+                 ({
                      cs_name = "todo";
                      cs_data = PropList.Data.create ();
                      cs_plugin_data = []

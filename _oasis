@@ -48,6 +48,14 @@ Executable todo
   Install:          false
   BuildDepends:     d3, lwt, js_of_ocaml-lwt, js_of_ocaml-ppx, yojson
 
+Executable line_graph
+  Path:             examples
+  MainIs:           line_graph.ml
+  Build$:           flag(examples)
+  CompiledObject:   byte
+  Install:          false
+  BuildDepends:     d3, lwt, js_of_ocaml-lwt, js_of_ocaml-ppx, yojson
+
 SourceRepository master
   Type:     git
   Location: https://github.com/seliopou/ocaml-d3.git
