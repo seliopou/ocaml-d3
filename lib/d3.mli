@@ -70,6 +70,10 @@ val attr : string -> ('a, string) fn -> ('a, 'a) t
 
     {{:https://github.com/mbostock/d3/wiki/Selections#attr}D3.js docs} *)
 
+val attr_obj : string -> ('a, 'b) fn -> ('a, 'a) t
+(** Similar to [attr], except that the return type of [f] does not have to be
+    a string. In particular, f may return a function or an ['a Js.t]. *)
+
 val classed : string -> ('a, bool) fn -> ('a, 'a) t
 (** [classed class f] sets whether or not [class] is associated with the
     selected elements. This is determined by calling [f] for each element,
@@ -176,6 +180,9 @@ val data  : ('a -> int -> 'b list) -> ('a, 'b) t
 val datum : ('a -> int -> 'b) -> ('a, 'b) t
 (** {{:https://github.com/mbostock/d3/wiki/Selections#datum}D3.js docs} *)
 
+val call : ('a -> int -> 'b list) -> ('a, 'b) t
+(** Uses the [call] Javascript method on a [('a -> 'b) Js.t]. *)
+
 val enter : ('a, 'a) t
 (** [enter] returns the enter selection: placeholder nodes for each data
     element for which no corresponding existing DOM element was found in the
@@ -255,6 +262,9 @@ val flt : (string -> ('a, string) fn -> ('a, 'a) t) -> string -> float  -> ('a, 
 |. attr  "width"  (fun _ _ _ -> string_of_int width)
 |. style "fill"   (fun _ _ _ -> "blue")]} *)
 
+(** {2 Other functions} *)
+val transition : ('a, 'a) t
+val fun_call : string -> ('a, string) fn -> ('a, 'a) t
 
 (** Event handlers *)
 module E : sig

@@ -56,10 +56,15 @@ let thunk_call (meth:string) cxt =
 
 let mb = Js.wrap_meth_callback
 
+let fun_call name f = const_call name (mb (fun this d i () -> f this d i))
+;;
+
 let select    name = const_call "select"    (Js.string name)
 let selectAll name = const_call "selectAll" (Js.string name)
 
 let attr     name f = name_call "attr"     name (mb (fun this d i () -> Js.string (f this d i)))
+let attr_obj name f = name_call "attr"     name (mb (fun this d i () ->
+  (f this d i)))
 let classed  name f = name_call "classed"  name (mb (fun this d i () -> Js.bool   (f this d i)))
 let style    name f = name_call "style"    name (mb (fun this d i () -> Js.string (f this d i)))
 let property name f = name_call "property" name (mb (fun this d i () -> f this d i))
@@ -73,6 +78,7 @@ let remove : ('a, 'a) t = thunk_call "remove"
 
 let datum f = const_call "datum" (fun d i -> f d i)
 let data  f = const_call "data"  (fun d i -> Js.array (Array.of_list (f d i)))
+let call  f = const_call "call" (fun d i -> f d i)
 
 let enter  : ('a, 'a) t = thunk_call "enter"
 let update : ('a, 'a) t = fun x -> x
@@ -136,6 +142,9 @@ let static name =
       ignore ((append name <.> str attr "ocaml-d3-gensym" gensym_) this)
   in
   _seq (each f) (select selector)
+;;
+
+let transition : ('a, 'a) t = thunk_call "transition"
 ;;
 
 module E = struct
